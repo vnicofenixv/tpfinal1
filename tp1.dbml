@@ -1,0 +1,167 @@
+Table operativa {
+	op_cod integer [ pk, increment, not null, unique ]
+	op_nom varchar
+	op_fecha date
+	op_inicio time
+	op_termino time
+}
+
+Table asistente {
+	as_cod integer [ pk, increment, not null, unique ]
+	as_nom varchar
+	as_apell varchar
+	as_ci integer
+	as_tel varchar
+	dep_cod integer
+}
+
+Table cliente {
+	cli_cod integer [ pk, increment, not null, unique ]
+	cli_nom varchar
+	cli_email varchar
+	cli_tel varchar
+}
+
+Table deposito {
+	dep_cod integer [ pk, increment, not null, unique ]
+	dep_zona varchar
+}
+
+Table encargado {
+	enc_cod integer [ pk, increment, not null, unique ]
+	enc_nom varchar
+	enc_apell varchar
+	enc_ci integer
+	enc_tel varchar
+	enc_email varchar
+	atc_cod integer
+	dep_cod integer
+}
+
+Table operador {
+	op_cod integer [ pk, increment, not null, unique ]
+	op_nom varchar
+	op_apell varchar
+	op_ci integer
+	op_tel varchar
+	mont_cod integer
+	dep_cod integer
+}
+
+Table montacarga {
+	mont_cod integer [ pk, increment, not null, unique ]
+	mont_nom varchar
+	mont_tipo varchar
+	mont_cap varchar
+}
+
+Table auxiliar {
+	aux_cod integer [ pk, increment, not null, unique ]
+	aux_nom varchar
+	aux_apell varchar
+	aux_ci integer
+	aux_tel varchar
+	dep_cod integer
+}
+
+Table cfs {
+	cfs_cod integer [ pk, increment, not null, unique ]
+	cfs_nom varchar
+	cfs_obs text
+	as_cod integer
+}
+
+Table aduana {
+	adu_cod integer [ pk, increment, not null, unique ]
+	adu_nom varchar
+	adu_apell varchar
+	adu_ci integer
+	adu_divis varchar
+	adu_tel varchar
+	adu_email varchar
+	op_cod integer
+}
+
+Table documento {
+	doc_cod integer [ pk, increment, not null, unique ]
+	doc_nom varchar
+	desp_cod integer
+}
+
+Table atc {
+	atc_cod integer [ pk, increment, not null, unique ]
+	atc_nom varchar
+	atc_apell varchar
+	atc_ci integer
+	atc_tel varchar
+	atc_email varchar
+	op_cod integer
+	doc_cod integer
+}
+
+Table operador_montacarga {
+	op_cod integer [ increment, unique ]
+	mont_cod integer
+}
+
+Table despachante {
+	desp_cod integer [ pk, increment, not null, unique ]
+	desp_nom varchar
+	desp_apellido varchar
+	desp_ci integer
+	desp_tel varchar
+	desp_email varchar
+	cli_cod integer
+}
+
+Ref fk_encargado_atc_cod_atc {
+	encargado.atc_cod > atc.atc_cod [ delete: restrict, update: cascade ]
+}
+
+Ref fk_montacarga_mont_cod_operador_montacarga {
+	montacarga.mont_cod < operador_montacarga.mont_cod [ delete: restrict, update: cascade ]
+}
+
+Ref fk_atc_op_cod_operativa {
+	atc.op_cod > operativa.op_cod [ delete: restrict, update: cascade ]
+}
+
+Ref fk_operador_montacarga_op_cod_operador {
+	operador_montacarga.op_cod > operador.op_cod [ delete: restrict, update: cascade ]
+}
+
+Ref fk_cfs_as_cod_asistente {
+	cfs.as_cod > asistente.as_cod [ delete: restrict, update: cascade ]
+}
+
+Ref fk_deposito_dep_cod_auxiliar {
+	deposito.dep_cod > auxiliar.dep_cod [ delete: restrict, update: cascade ]
+}
+
+Ref fk_asistente_dep_cod_deposito {
+	asistente.dep_cod > deposito.dep_cod [ delete: restrict, update: cascade ]
+}
+
+Ref fk_operador_dep_cod_deposito {
+	operador.dep_cod > deposito.dep_cod [ delete: restrict, update: cascade ]
+}
+
+Ref fk_documento_doc_cod_atc {
+	documento.doc_cod > atc.doc_cod [ delete: restrict, update: cascade ]
+}
+
+Ref fk_despachante_cli_cod_cliente {
+	despachante.cli_cod > cliente.cli_cod [ delete: restrict, update: cascade ]
+}
+
+Ref fk_documento_desp_cod_despachante {
+	documento.desp_cod > despachante.desp_cod [ delete: restrict, update: cascade ]
+}
+
+Ref fk_encargado_dep_cod_deposito {
+	encargado.dep_cod > deposito.dep_cod [ delete: restrict, update: cascade ]
+}
+
+Ref fk_operativa_op_cod_aduana {
+	operativa.op_cod > aduana.op_cod [ delete: restrict, update: cascade ]
+}
